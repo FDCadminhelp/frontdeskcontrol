@@ -1,0 +1,132 @@
+Use PNPM commands to install all the required dependencies and libraries:
+
+1. Core Security Features for Registration
+a. Secure Password Management
+Use bcrypt or Argon2 for hashing passwords.
+Libraries:
+bcrypt (more common, widely supported).
+argon2 (more secure and future-proof).
+b. Input Validation
+Ensure all user inputs (e.g., email, passwords, names) are validated on both the client and server side to prevent injection attacks.
+Libraries:
+Frontend: yup (schema validation).
+Backend: express-validator or joi.
+c. Email Verification
+Require users to verify their email address before activating their account.
+Use a JWT token for the confirmation link, which expires after a set time (e.g., 24 hours).
+Example flow:
+Generate a unique JWT for the user with a short expiration.
+Send the email with the confirmation link (e.g., /verify-email?token=xyz).
+On link click, verify the token and activate the account.
+d. Rate Limiting & CAPTCHA
+Protect your registration form against bot attacks:
+Rate Limiting:
+Backend: Use express-rate-limit to limit the number of requests.
+CAPTCHA:
+Add a CAPTCHA for added bot protection.
+Libraries: react-google-recaptcha or hCaptcha.
+e. CSRF Protection
+Add CSRF tokens to prevent cross-site request forgery.
+Library: csurf for Express.
+f. Secure Session Management
+Use httpOnly cookies for storing session tokens securely.
+Implement Secure, SameSite, and Expiration flags for cookies.
+g. Logging and Monitoring
+Use tools like Sentry or Winston to monitor failed registration attempts and suspicious activity.
+
+2. Recommended Libraries
+Frontend Libraries
+Formik: For building forms with validation.
+Yup: Schema-based validation for registration fields.
+React Toastify: For notifications (e.g., "Registration successful").
+react-google-recaptcha: For CAPTCHA integration.
+Backend Libraries
+bcrypt or argon2: For secure password hashing.
+jsonwebtoken: For email confirmation links and user sessions.
+express-rate-limit: To prevent abuse of the registration endpoint.
+csurf: For CSRF protection.
+validator: To sanitize and validate user input (e.g., email format).
+nodemailer: To send verification emails.
+
+3. Registration Workflow
+Frontend Validation:
+Validate input fields (e.g., email, password) using yup or a similar library.
+Ensure the password meets complexity requirements (e.g., minimum length, special characters).
+Prevent submission until all validations pass.
+Backend Validation:
+Re-validate the input server-side using joi or express-validator.
+Sanitize inputs to prevent SQL injection and XSS attacks.
+Hash Password:
+Hash the password using bcrypt or argon2 before saving it in the database.
+Generate Email Verification Link:
+Create a JWT token with the user’s email and a short expiration time.
+Send the token in the email confirmation link.
+Activate User Account:
+When the user clicks the verification link:
+Verify the JWT token.
+Activate the account in the database.
+
+
+4. Example Technology Stack
+Frontend
+React for UI.
+Formik + Yup for form handling and validation.
+react-google-recaptcha for CAPTCHA.
+Backend
+Node.js + Express.
+bcrypt for password hashing.
+jsonwebtoken for email verification.
+express-rate-limit for rate limiting.
+nodemailer for sending emails.
+
+5. Security Best Practices
+Encrypt Sensitive Data: Always hash passwords and avoid storing raw passwords.
+Use HTTPS: Encrypt all communications.
+Limit Failed Attempts: Lock accounts temporarily after multiple failed registration attempts.
+Password Policies: Enforce strong password requirements.
+Environment Variables: Store sensitive configurations (e.g., email credentials, JWT secret) in environment variables using tools like dotenv.
+
+
+Common Issues and Solutions
+1. File Path Resolution
+Problem: Module import paths causing ERR_MODULE_NOT_FOUND errors Solution:
+Always use relative paths correctly (./ or ../)
+Ensure file names match exactly in imports
+Keep consistent naming conventions
+2. CORS Configuration
+Problem: Cross-origin request blocking Solution:
+Code
+CopyInsert
+const corsOptions = {
+    origin: 'https://frontdeskcontrol.com',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+3. Deployment Issues
+Problem: PM2 configuration and process management Solution:
+Use proper PM2 configuration file (pm2.config.cjs)
+Ensure correct file paths in PM2 config
+Regular process monitoring and logging
+4. Git Workflow Issues
+Problem: Merge conflicts and file structure inconsistencies Solution:
+Regular commits and pulls
+Resolve conflicts promptly
+Maintain consistent file structure between environments
+Best Practices for Future Development
+File Structure
+Keep consistent naming conventions
+Use clear directory structure
+Document file purposes and dependencies
+Code Organization
+Separate concerns (routes, middleware, controllers)
+Use meaningful variable and function names
+Comment complex logic
+Deployment Process
+Test locally before deployment
+Use staging environment when possible
+Maintain backup of critical configurations
+Version Control
+Regular commits with clear messages
+Feature branches for new development
+Pull requests for code review
